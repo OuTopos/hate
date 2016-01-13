@@ -5,7 +5,7 @@ local function new(parent)
 	self.parent = parent
 	self.children = {}
 
-	self.sortchildren = false
+	self.sortchildren = true
 
 	self.drawable = nil
 
@@ -27,8 +27,8 @@ local function new(parent)
 	self.ox = 0
 	self.oy = 0
 
-	self.width = 0
-	self.height = 0
+	self.width = 10
+	self.height = 10
 
 	function self.newChild()
 		local child = new(self)

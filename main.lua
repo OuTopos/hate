@@ -10,7 +10,15 @@ function love.load()
 	game.world.enablePhysics()
 
 	game.camera = hate.newCamera()
+	game.camera.x = -50
+	game.camera.y = -50
+	game.camera.r = 0
+	game.camera.sx = 1
+	game.camera.sy = 1
+	game.camera.width = 300
+	game.camera.height = 400
 	game.camera.attach(game.world.scene)
+
 	game.player = game.world.newEntity("player", {700,400, 0})
 
 
@@ -40,6 +48,10 @@ function love.load()
 	tree02.x = 100
 	print(tree02.getAbsolutes())
 
+	local tree03 = game.world.scene.newChild()
+	tree03.drawable = treedead
+	tree03.x = 300
+	tree03.y = 100
 
 end
 

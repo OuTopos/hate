@@ -2,38 +2,81 @@ local hate = require((...):match("(.+)%.[^%.]+$") .. ".table")
 
 local cameras = {}
 
-local function new()
+local function new(viewport)
 	local self = {}
 
 	self.x = 0
 	self.y = 0
+	self.r = 0
 
-	local scene = nil
+	self.sx = 1
+	self.sy = 1
 
-	function self.attach(sceneentity)
-		if sceneentity then
-			scene = sceneentity
+	self.width = 0
+	self.height = 0
+
+	self.round = false
+
+	-- Translate for the camera run before drawing everything. It's public so it can be run from other places when drawing overlay gui.
+	function self.translate()
+		love.graphics.push()
+		love.graphics.translate(self.width / 2 * self.sx, self.height / 2 * self.sy)
+ 		love.graphics.rotate(- self.r)
+		love.graphics.translate(- self.width / 2 * self.sx, - self.height / 2 * self.sy)
+		love.graphics.scale(self.sx, self.sy)
+		love.graphics.translate(- self.x, - self.y)
+	end
+
+	-- Ocular returns true if the sentity is in camera view.
+	local function ocular(sentity)
+		return (
+			( sentity.x <= self.x + self.width / self.sx ) and
+			( self.x <= sentity.x + sentity.height ) and
+			( sentity.y <= self.y + self.height / self.sy ) and
+			( self.y <= sentity.y + sentity.width )
+		)
+	end
+
+	-- ROOTSENTITY
+	local rootsentity = nil
+
+	-- Attach and detach a rootsentity. It and all it's children will be drawn.
+	function self.attach(sentity)
+		if sentity then
+			rootsentity = sentity
 		end
 	end
 
 	function self.detach()
-		scene = nil
+		rootsentity = nil
 	end
 
+
 	-- BUFFER
+	-- The buffer is a table filled with every *sorted sentity that is in view.
+	-- This buffer gets sorted and all sentities inside it will be drawn.
+	-- * If the children are not to be sorted they will not be added to the buffer. Instead they will be drawn when the parent is drawn.
+
 	local buffer = {}
 	
 	local function bufferSentity(sentity, root)
 		-- Buffer if sentity should be sorted. Also buffering if it's the root sentity to avoid an empty buffer.
 		if sentity.parent.sortchildren or root then
-			table.insert(buffer, sentity)
+			-- Test if the sentity is in view (ocular).
+			if ocular(sentity) then
+				-- Add sentity to the buffer.
+				table.insert(buffer, sentity)
+			end
 		end
 		-- Iterating on the children.
 		for k = #sentity.children, 1, -1 do
 			local child = sentity.children[k]
+			
 			if child.destroyed then
+				-- Remove child if it has been destroyed.
 				table.remove(sentity.children, k)
 			else
+				-- Else buffer the child.
 				bufferSentity(child)
 			end
 		end
@@ -43,31 +86,45 @@ local function new()
 
 	end
 
+	-- DRAW
+	-- drawChildren will call itself to draw the children. If you mess up you can easily create an infinite loop :)
+
 	local function drawSentity(sentity)
-		-- Draw children that are not in the buffer
+		-- Draw children if they didn't get added to the buffer.
 		if not sentity.sortchildren then
 			for k = 1, #sentity.children do
 				drawSentity(sentity.children[k])
 			end
 		end
+		-- Draw the actual drawable if there is one.
 		if sentity.drawable then
 			love.graphics.draw(sentity.drawable, sentity.x, sentity.y, sentity.r, sentity.sx, sentity.sy, sentity.ox, sentity.oy)
 		end
 	end
 
 	function self.draw()
-		if scene then
+		if rootsentity then
 			buffer = {}
-			bufferSentity(scene, true)
+			bufferSentity(rootsentity, true)
 
 			-- sort
 
 			-- translate and camera stuff
-			
+			self.translate()
+
 			-- Draw the buffer
 			for k = 1, #buffer do
 				drawSentity(buffer[k])
 			end
+
+
+
+			love.graphics.setColor(255, 0, 0, 127)
+			love.graphics.rectangle( "line", self.x, self.y, self.width / self.sx, self.height / self.sy)
+			love.graphics.setColor(255, 255, 255, 255)
+
+			-- UNSET CAMERA
+			love.graphics.pop()
 
 		end
 	end
