@@ -26,6 +26,8 @@ local function new(parent)
 	self.sy = 1
 	self.ox = 0
 	self.oy = 0
+	self.kx = 0
+	self.ky = 0
 
 	self.width = 10
 	self.height = 10

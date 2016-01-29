@@ -17,12 +17,21 @@ local function new(viewport)
 
 	self.round = false
 
-	-- Translate for the camera run before drawing everything. It's public so it can be run from other places when drawing overlay gui.
+	local shader = {}
+	function shader.predraw()
+
+	end
+	-- Translate for the camera run before drawing everything.
+	-- The fnction is public so it can be run from other places when drawing overlay gui.
 	function self.translate()
 		love.graphics.push()
+
+		-- Translate to camera center, rotate, translate back to make sure camerea rotates around center.
 		love.graphics.translate(self.width / 2 * self.sx, self.height / 2 * self.sy)
  		love.graphics.rotate(- self.r)
 		love.graphics.translate(- self.width / 2 * self.sx, - self.height / 2 * self.sy)
+
+		-- Then do the scale and translate.
 		love.graphics.scale(self.sx, self.sy)
 		love.graphics.translate(- self.x, - self.y)
 	end
@@ -98,33 +107,50 @@ local function new(viewport)
 		end
 		-- Draw the actual drawable if there is one.
 		if sentity.drawable then
-			love.graphics.draw(sentity.drawable, sentity.x, sentity.y, sentity.r, sentity.sx, sentity.sy, sentity.ox, sentity.oy)
+
+			-- SHADER PER DRAWCALL
+			love.graphics.draw(sentity.drawable, sentity.x, sentity.y, sentity.r, sentity.sx, sentity.sy, sentity.ox, sentity.oy, sentity.kx, sentity.ky)
 		end
 	end
 
 	function self.draw()
 		if rootsentity then
+			-- Clear the buffer, clear it here instead of after draw incase it's needed for debugging.
 			buffer = {}
+			-- Add the rootsentity to the buffer.
 			bufferSentity(rootsentity, true)
 
-			-- sort
+			-- SHADER PRE DRAW
+			shader.predraw()
+			-- To bee done.
 
-			-- translate and camera stuff
+			-- Sort the buffer.
+
+			-- Translate.
 			self.translate()
 
-			-- Draw the buffer
+			-- Draw the buffer.
 			for k = 1, #buffer do
 				drawSentity(buffer[k])
 			end
 
-
-
+			-- Debugging temp stuff
 			love.graphics.setColor(255, 0, 0, 127)
 			love.graphics.rectangle( "line", self.x, self.y, self.width / self.sx, self.height / self.sy)
 			love.graphics.setColor(255, 255, 255, 255)
 
-			-- UNSET CAMERA
+
+			love.graphics.setColor(0, 0, 0, 255)
+			love.graphics.printf("Buffer: " .. #buffer, self.x+3, self.y+3, 100, "right")
+
+			love.graphics.setColor(255, 255, 255, 255)
+			love.graphics.printf("Buffer: " .. #buffer, self.x+2, self.y+2, 100, "right")
+
+			-- Unset the camera.
 			love.graphics.pop()
+
+			-- SHADER POST DRAW
+			-- To be done.
 
 		end
 	end

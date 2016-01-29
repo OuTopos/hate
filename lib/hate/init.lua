@@ -11,7 +11,9 @@ hate.paths.entities = hate.paths.src .. "/entities"
 -- MODULES
 hate.worlds         = require(... .. ".worlds")
 hate.sentities      = require(... .. ".sentities")
+hate.viewports      = require(... .. ".viewports")
 hate.cameras        = require(... .. ".cameras")
+hate.camerashaders  = require(... .. ".camerashaders")
 --hate.viewports      = require(hate.paths.lib .. "/hate.viewports")
 
 hate.tools		    = require(... .. ".tools")
@@ -72,7 +74,7 @@ end
 
 local function load()
 	--love.graphics.setDefaultFilter("linear", "linear")
-	love.graphics.setDefaultFilter("nearest", "nearest")
+	--love.graphics.setDefaultFilter("nearest", "nearest")
 
 	-- Loading entities
 	print(hate.paths.entities)
@@ -83,12 +85,11 @@ local function update(dt)
 	if not hate.v.paused then
 		hate.worlds.update(dt)
 	end
-	--hate.viewports.update(dt)
+	hate.viewports.update(dt)
 end
 
 local function draw()
-	-- hate.worlds.draw()
-	--hate.viewports.draw()
+	hate.viewports.draw()
 
 	---[[ FPS
 	love.graphics.setColor(0, 0, 0, 255)
@@ -158,6 +159,7 @@ return {
 	draw = draw,
 
 	newWorld = hate.worlds.new,
+	newViewport = hate.viewports.new,
 	newCamera = hate.cameras.new,
 	--newViewport = hate.viewports.new,
 
