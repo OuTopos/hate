@@ -5,6 +5,8 @@ local cameras = {}
 local function new(viewport)
 	local self = {}
 
+	self.shader = love.graphics.newShader("vert.glsl")
+
 	self.x = 0
 	self.y = 0
 	self.r = 0
@@ -19,7 +21,13 @@ local function new(viewport)
 
 	local shader = {}
 	function shader.predraw()
+		self.shader:send("XCam", self.x)
+		self.shader:send("YCam", self.y)
+		love.graphics.setShader(self.shader)
+	end
 
+	function shader.postdraw()
+		love.graphics.setShader()
 	end
 	-- Translate for the camera run before drawing everything.
 	-- The fnction is public so it can be run from other places when drawing overlay gui.
@@ -150,6 +158,7 @@ local function new(viewport)
 			love.graphics.pop()
 
 			-- SHADER POST DRAW
+			shader.postdraw()
 			-- To be done.
 
 		end

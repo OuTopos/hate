@@ -50,7 +50,20 @@ function newLight(camera)
 	return self
 end
 
+local function new()
+	local self = {}
+	self.shader = love.graphics.newShader("vert.glsl")
+
+	function self.predraw()
+
+	end
+
+	function self.postsdraw()
+
+	end
+
+end
 
 return {
-	newLight = newLight
+	new = new
 }
