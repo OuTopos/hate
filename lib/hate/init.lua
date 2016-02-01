@@ -18,42 +18,13 @@ hate.camerashaders  = require(... .. ".camerashaders")
 
 hate.tools		    = require(... .. ".tools")
 
+hate.debug		    = require(... .. ".debug")
+
 -- VARIABLES
 hate.v = {}
 hate.v.paused = false
 hate.v.gcInterval = 10
 hate.v.gcTimer = 10
-
-
--- DEBUG FUNCTIONS
-hate.log = love.filesystem.newFile("hate.log")
-hate.log:open("w")
-
-
-hate.debug = {}
-hate.debug.level = 2
-hate.debug.warning2error = false
-hate.debug.log = false
-
-function info(text, i)
-	if hate.debug.level >= 2 then
-		local info = debug.getinfo(i or 2, "lS")
-		print("Info: " .. info.short_src .. ":" .. info.currentline .. ": " .. text)
-		hate.log:write("Info: " .. info.short_src .. ":" .. info.currentline .. ": " .. text .. "\r\n")
-	end
-end
-function warning(text, i)
-	if hate.debug.level >= 1 then
-		if hate.debug.warning2error then
-			error(text)
-		else
-			local info = debug.getinfo(i or 2, "lS")
-			print("Warning: " .. info.short_src .. ":" .. info.currentline .. ": " .. text)
-			hate.log:write("Warning: " .. info.short_src .. ":" .. info.currentline .. ": " .. text .. "\r\n")
-		end
-	end
-end
-
 
 -- TOOLS
 
@@ -169,4 +140,5 @@ return {
 
 	assets = hate.assets,
 	tools = hate.tools,
+	debug = hate.debug
 }

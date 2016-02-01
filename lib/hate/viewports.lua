@@ -63,6 +63,7 @@ local function new()
 	function self.draw()
 		-- set canvas
 		love.graphics.setCanvas(canvas)
+		love.graphics.clear()
 
 		for k = 1, #cameras do
 			cameras[k].draw()

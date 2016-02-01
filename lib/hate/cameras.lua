@@ -17,12 +17,17 @@ local function new(viewport)
 	self.width = 0
 	self.height = 0
 
+	self.cx = 0
+	self.cy = 0
+
 	self.round = false
+
+	self.target = nil
 
 	local shader = {}
 	function shader.predraw()
-		self.shader:send("XCam", self.x)
-		self.shader:send("YCam", self.y)
+		--self.shader:send("XCam", self.x)
+		--self.shader:send("YCam", self.y)
 		love.graphics.setShader(self.shader)
 	end
 
@@ -100,7 +105,15 @@ local function new(viewport)
 	end
 
 	function self.update(dt)
+		if self.target then
+			if self.target.x and self.target.y then
+				self.x = self.target.x - self.width / 2
+				self.y = self.target.y - self.height / 2
+			end
+		end
 
+		self.cx = self.x + self.width / 2
+		self.cy = self.y + self.height / 2
 	end
 
 	-- DRAW

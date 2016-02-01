@@ -1,6 +1,7 @@
 require("strict")
 
 local hate = require("lib.hate")
+hate.debug.setLevel(2)
 
 local game = {}
 function love.load()
@@ -21,7 +22,9 @@ function love.load()
 	game.camera.attach(game.world.scene)
 
 	game.player = game.world.newEntity("player", {700,400, 0})
+	game.player.setJoystick(love.joystick.getJoysticks()[1])
 
+	game.camera.target = game.player
 
 	local bleed = love.graphics.newImage("assets/bleed.png")
 	--game.world.scene.drawable = bleed
@@ -58,18 +61,18 @@ function love.load()
 		{"VertexPosition", "float", 2}, -- The x,y position of each vertex.
 		{"VertexTexCoord", "float", 2}, -- The u,v texture coordinates of each vertex.
 		{"VertexColor", "byte", 4}, -- The r,g,b,a color of each vertex.
-		{"ZPosition", "float", 1}
+		{"z", "float", 1}
 	}
 
 	local vertices = {
-		{0, 0, 0, 0, 255, 255, 255, 255, 1},
-		{100, 0, 1, 0, 255, 255, 255, 255, 1},
-		{100, 100, 1, 1, 255, 255, 255, 255, 0},
+		{0, 0, 0, 0, 255, 255, 255, 255, 128},
+		{128, 0, 1, 0, 255, 255, 255, 255, 128},
+		{128, 128, 1, 1, 255, 255, 255, 255, 0},
 
 
-		{100, 100, 1, 1, 255, 255, 255, 255, 0},
-		{0, 100, 0, 1, 255, 255, 255, 255, 0},
-		{0, 0, 0, 0, 255, 255, 255, 255, 1}
+		{128, 128, 1, 1, 255, 255, 255, 255, 0},
+		{0, 128, 0, 1, 255, 255, 255, 255, 0},
+		{0, 0, 0, 0, 255, 255, 255, 255, 128}
 	}
 
 
@@ -77,6 +80,8 @@ function love.load()
 	local testmesh = game.world.scene.newChild()
 	testmesh.drawable = love.graphics.newMesh( vertexformat, vertices, "triangles")
 	testmesh.drawable:setTexture(bleed)
+	testmesh.width = 128
+	testmesh.height = 128
 
 
 end
@@ -86,9 +91,12 @@ function love.update(dt)
 end
 
 function love.draw()
-	--game.camera.draw()
 	hate.draw()
 
+	-- PHYSICS DEBUG - very tempy
+	game.camera.translate()
+	hate.debug.drawPhysics(game.world.physics)
+	love.graphics.pop()
 end
 
 function love.resize(w, h)

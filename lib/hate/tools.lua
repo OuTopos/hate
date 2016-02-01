@@ -103,4 +103,5 @@ local function rgba2num(rgba)
 end
 
 return {
+	getDistance = getDistance
 }
