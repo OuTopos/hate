@@ -16,7 +16,7 @@ local function new(world, x, y, z)
 
 
 	-- SENTITY
-	local img = love.graphics.newImage("assets/barrel.png")
+	local img = love.graphics.newImage("assets/player.png")
 
 	local sentity = world.scene.newChild()
 	sentity.drawable = img

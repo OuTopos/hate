@@ -16,6 +16,9 @@ hate.cameras        = require(... .. ".cameras")
 hate.camerashaders  = require(... .. ".camerashaders")
 --hate.viewports      = require(hate.paths.lib .. "/hate.viewports")
 
+
+hate.animations	    = require(... .. ".animations")
+
 hate.tools		    = require(... .. ".tools")
 
 hate.debug		    = require(... .. ".debug")

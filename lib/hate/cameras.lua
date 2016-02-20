@@ -26,8 +26,7 @@ local function new(viewport)
 
 	local shader = {}
 	function shader.predraw()
-		--self.shader:send("XCam", self.x)
-		--self.shader:send("YCam", self.y)
+		self.shader:send("camera_position" , {self.cx, self.cy})
 		love.graphics.setShader(self.shader)
 	end
 
@@ -163,9 +162,11 @@ local function new(viewport)
 
 			love.graphics.setColor(0, 0, 0, 255)
 			love.graphics.printf("Buffer: " .. #buffer, self.x+3, self.y+3, 100, "right")
+			love.graphics.printf("Camera: " .. self.cx .. " " .. self.cy, self.x+3, self.y+13, 200, "left")
 
 			love.graphics.setColor(255, 255, 255, 255)
 			love.graphics.printf("Buffer: " .. #buffer, self.x+2, self.y+2, 100, "right")
+			love.graphics.printf("Camera: " .. self.cx .. " " .. self.cy, self.x+2, self.y+12, 200, "left")
 
 			-- Unset the camera.
 			love.graphics.pop()

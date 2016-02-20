@@ -22,16 +22,14 @@ function love.load()
 	game.camera.attach(game.world.scene)
 
 	game.player = game.world.newEntity("player", {700,400, 0})
-	game.player.setJoystick(love.joystick.getJoysticks()[1])
+	if love.joystick.getJoystickCount() > 0 then
+		game.player.setJoystick(love.joystick.getJoysticks()[1])
+	end
 
 	game.camera.target = game.player
 
 	local bleed = love.graphics.newImage("assets/bleed.png")
 	--game.world.scene.drawable = bleed
-
-	local whale = love.graphics.newImage("assets/whale.png")
-	local whaleSentity = game.world.scene.newChild()
-	whaleSentity.drawable = whale
 
 	local tree1 = love.graphics.newImage("assets/tree1.png")
 	local tree2 = love.graphics.newImage("assets/tree2.png")
@@ -40,22 +38,6 @@ function love.load()
 	local treestump = love.graphics.newImage("assets/treestump.png")
 	local barrel = love.graphics.newImage("assets/barrel.png")
 
-	local tree01 = game.world.scene.newChild()
-	tree01.drawable = tree1
-	--tree01.setX(400)
-	tree01.x = 400
-	tree01.sortchildren = true
-
-	local tree02 = tree01.newChild()
-	tree02.drawable = tree1
-	tree02.y = 200
-	tree02.x = 100
-	print(tree02.getAbsolutes())
-
-	local tree03 = game.world.scene.newChild()
-	tree03.drawable = treedead
-	tree03.x = 300
-	tree03.y = 100
 
 	local vertexformat = {
 		{"VertexPosition", "float", 2}, -- The x,y position of each vertex.
@@ -82,6 +64,30 @@ function love.load()
 	testmesh.drawable:setTexture(bleed)
 	testmesh.width = 128
 	testmesh.height = 128
+	--testmesh.r = 0.1
+
+	local treeverts = {
+		{0, 0, 0, 0, 255, 255, 255, 255, 256},
+		{256, 0, 1/3, 0, 255, 255, 255, 255, 256},
+		{256, 256, 1/3, 1, 255, 255, 255, 255, 0},
+
+
+		{256, 256, 1/3, 1, 255, 255, 255, 255, 0},
+		{0, 256, 0, 1, 255, 255, 255, 255, 0},
+		{0, 0, 0, 0, 255, 255, 255, 255, 256}
+	}
+	local img_bigtrees = love.graphics.newImage("assets/bigtrees.png")
+
+	for i = 0, 100 do
+		local sentity = game.world.scene.newChild()
+		sentity.drawable = love.graphics.newMesh( vertexformat, treeverts, "triangles")
+		sentity.drawable:setTexture(img_bigtrees)
+		sentity.width = 256
+		sentity.height = 256
+		sentity.x = math.random(0, 2000)
+		sentity.y = math.random(0, 1000)
+	end
+
 
 
 end
