@@ -35,7 +35,7 @@ end
 function info(text, i)
 	if level >= 2 then
 		local info = debug.getinfo(i or 2, "lS")
-		local finaltext = "Info: " .. info.short_src .. ":" .. info.currentline .. ": " .. text
+		local finaltext = "INFO: " .. info.short_src .. ":" .. info.currentline .. ": " .. text
 		print(finaltext)
 		if log then
 			log:write(finaltext .. "\r\n")
@@ -48,7 +48,7 @@ function warning(text, i)
 			error(text)
 		else
 			local info = debug.getinfo(i or 2, "lS")
-			local finaltext = "Warning: " .. info.short_src .. ":" .. info.currentline .. ": " .. text
+			local finaltext = "WARNING: " .. info.short_src .. ":" .. info.currentline .. ": " .. text
 			print(finaltext)
 			if log then
 				log:write(finaltext .. "\r\n")

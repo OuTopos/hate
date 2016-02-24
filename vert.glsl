@@ -1,6 +1,6 @@
 attribute float z;
 uniform vec2 camera_position = vec2(0.0, 0.0);
-uniform vec2 parallax_offset = vec2(0, 0);
+uniform vec2 parallax_offset = vec2(0.0008, 0.0);
 varying vec4 vpos;
 
 vec4 position( mat4 transform_projection, vec4 vertex_position )

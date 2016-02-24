@@ -76,7 +76,7 @@ function love.load()
 		{0, 256, 0, 1, 255, 255, 255, 255, 0},
 		{0, 0, 0, 0, 255, 255, 255, 255, 256}
 	}
-	local img_bigtrees = love.graphics.newImage("assets/bigtrees.png")
+	local img_bigtrees = hate.loadImage("bigtrees.png")
 
 	for i = 0, 100 do
 		local sentity = game.world.scene.newChild()
@@ -87,8 +87,6 @@ function love.load()
 		sentity.x = math.random(0, 2000)
 		sentity.y = math.random(0, 1000)
 	end
-
-
 
 end
 

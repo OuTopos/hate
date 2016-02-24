@@ -3,10 +3,12 @@ local hate = require(... .. ".table")
 -- PATHS
 hate.paths = {}
 hate.paths.lib = ...
-hate.paths.src = "src"
-hate.paths.assets = "assets"
 
+hate.paths.src = "src"
 hate.paths.entities = hate.paths.src .. "/entities"
+
+hate.paths.assets = "assets"
+hate.paths.images = hate.paths.assets .. "/images"
 
 -- MODULES
 hate.worlds         = require(... .. ".worlds")
@@ -14,9 +16,8 @@ hate.sentities      = require(... .. ".sentities")
 hate.viewports      = require(... .. ".viewports")
 hate.cameras        = require(... .. ".cameras")
 hate.camerashaders  = require(... .. ".camerashaders")
---hate.viewports      = require(hate.paths.lib .. "/hate.viewports")
 
-
+hate.assets	    = require(... .. ".assets")
 hate.animations	    = require(... .. ".animations")
 
 hate.tools		    = require(... .. ".tools")
@@ -137,11 +138,13 @@ return {
 	newCamera = hate.cameras.new,
 	--newViewport = hate.viewports.new,
 
+	images = hate.assets.images,
+	loadImage = hate.assets.loadImage,
+
 	keybindings = hate.keybindings,
 
 	requireDir = requireDir,
 
-	assets = hate.assets,
 	tools = hate.tools,
 	debug = hate.debug
 }

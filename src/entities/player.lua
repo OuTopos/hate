@@ -34,22 +34,24 @@ local function new(world, x, y, z)
 		local movex, movey = 0, 0
 		local aimx, aimy = 0, 0
 		
-		if self.joystick then
-			movex = self.joystick:getGamepadAxis("leftx")
-			movey = self.joystick:getGamepadAxis("lefty")
-			aimx = self.joystick:getGamepadAxis("rightx")
-			aimy = self.joystick:getGamepadAxis("righty")
-		end	
-
-		if love.keyboard.isDown("left") then
-			movex = -1
-		elseif love.keyboard.isDown("right") then
-			movex = 1
-		end
-		if love.keyboard.isDown("up") then
-			movey = -1
-		elseif love.keyboard.isDown("down") then
-			movey = 1
+		if love.keyboard.isDown("left", "right", "up", "down") then
+			if love.keyboard.isDown("left") then
+				movex = -1
+			elseif love.keyboard.isDown("right") then
+				movex = 1
+			end
+			if love.keyboard.isDown("up") then
+				movey = -1
+			elseif love.keyboard.isDown("down") then
+				movey = 1
+			end
+		else
+			if self.joystick then
+				movex = self.joystick:getGamepadAxis("leftx")
+				movey = self.joystick:getGamepadAxis("lefty")
+				aimx = self.joystick:getGamepadAxis("rightx")
+				aimy = self.joystick:getGamepadAxis("righty")
+			end
 		end
 
 		local movedistance = hate.tools.getDistance(0, 0, movex, movey)

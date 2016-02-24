@@ -1,7 +1,9 @@
 local hate = require((...):match("(.+)%.[^%.]+$") .. ".table")
 
 -- List of all the animations
-local list = require(hate.paths.src .. "/animations")
+if love.filesystem.exists(hate.paths.src .. "/animations.lua") then
+	local list = require(hate.paths.src .. "/animations")
+end
 
 local function new()
 	local self = {}
@@ -11,7 +13,7 @@ local function new()
 	self.timescale = 1
 
 	self.time = 0
-	self.animation = nil
+	local animation = nil
 
 	self.delay = 1
 	self.first = 1
@@ -23,14 +25,14 @@ local function new()
 	function self.set(animation, force, loop, finish, reverse)
 		if not self.finish or self.finished or force then
 			self.time = 0
-			self.animation = list[animation]
+			animation = list[animation]
 
-			self.delay = self.animation.delay
-			self.first = self.animation.first
-			self.last = self.animation.last
-			self.loop = loop or self.animation.loop
-			self.finish = finish or self.animation.finish
-			self.reverse = reverse or self.animation.reverse
+			self.delay = animation.delay
+			self.first = animation.first
+			self.last = animation.last
+			self.loop = loop or animation.loop
+			self.finish = finish or animation.finish
+			self.reverse = reverse or animation.reverse
 
 			self.frame = self.first
 			self.finished = false
@@ -38,7 +40,7 @@ local function new()
 	end
 
 	function self.update(dt, animation)
-		if animation and list[animation] ~= self.animation then
+		if animation and list[animation] ~= animation then
 			self.set(animation)
 		end
 		

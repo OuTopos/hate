@@ -26,7 +26,7 @@ local function new(viewport)
 
 	local shader = {}
 	function shader.predraw()
-		self.shader:send("camera_position" , {self.cx, self.cy})
+		--self.shader:send("camera_position" , {self.cx, self.cy})
 		love.graphics.setShader(self.shader)
 	end
 
@@ -103,6 +103,51 @@ local function new(viewport)
 		end
 	end
 
+	-- SORT
+	local function sortmodeZ(a, b)
+		if a.z > b.z then
+			return true
+		end
+		return false
+	end
+
+	local function sortmodeY(a, b)
+		if a.y > b.y then
+			return true
+		end
+		return false
+	end
+
+	local function sortmodeYZ(a, b)
+		if a.y+a.z < b.y+b.z then
+			return true
+		end
+		if a.z == b.z then
+			if a.y < b.y then
+				return true
+			end
+			if a.y == b.y then
+				if a.x < b.x then
+					return true
+				end
+			end
+		end
+		return false
+	end
+
+	local sort = sortmodeYZ
+
+	local function setSortmode(mode)
+		if mode == "yz" then
+			sort = sortmodeZ
+		elseif mode == "y" then
+			sort = sortmodeY
+		elseif mode == "yz" then
+			sort = sortmodeYZ
+		end
+	end
+
+
 	function self.update(dt)
 		if self.target then
 			if self.target.x and self.target.y then
@@ -145,7 +190,7 @@ local function new(viewport)
 			-- To bee done.
 
 			-- Sort the buffer.
-
+			table.sort(buffer, sort)
 			-- Translate.
 			self.translate()
 
